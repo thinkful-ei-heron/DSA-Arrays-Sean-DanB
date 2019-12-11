@@ -1,24 +1,32 @@
-const memory = require('./memory')
+const mem = require('./memory')
+const memory = new mem
 
 class Array {
-  constructor() {
-    this.length = 0;
-    this.ptr = memory.allocate(this.length);
-  }
-  push(value) {
-    this._resize(this.length + 1);
-    memory.set(this.ptr + this.length, value);
-    this.length++;
-  }
-  _resize(size) {
-    const oldPtr = this.ptr;
-    this.ptr = memory.allocate(size);
-    if (this.ptr === null) {
-        throw new Error('Out of memory');
+    constructor() {
+        this.length = 0;
+        this._capacity = 0;
+        this.ptr = memory.allocate(this.length);
     }
-    memory.copy(this.ptr, oldPtr, this.length);
-    memory.free(oldPtr);
-  }
+
+    push(value) {
+        if (this.length >= this._capacity) {
+            this._resize((this.length + 1) * Array.SIZE_RATIO);
+        }
+
+        memory.set(this.ptr + this.length, value);
+        this.length++;
+    }
+
+    _resize(size) {
+        const oldPtr = this.ptr;
+        this.ptr = memory.allocate(size);
+        if (this.ptr === null) {
+            throw new Error('Out of memory');
+        }
+        memory.copy(this.ptr, oldPtr, this.length);
+        memory.free(oldPtr);
+        this._capacity = size;
+    }
   get(index) {
       if (index < 0 || index >= this.length) {
           throw new Error('Index error');
@@ -57,11 +65,16 @@ class Array {
 
 function main(){
   Array.SIZE_RATIO = 3;
-
   let arr = new Array();
 
-  arr.push(3)
+  arr.push(1);
+  arr.push(2);
+  arr.push(3);
+  arr.push(4);
+  arr.push(5);
+
+
   console.log(arr)
+  console.log("MEM", memory)
 }
 main()
-Array.SIZE_RATIO = 3;
