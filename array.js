@@ -1,4 +1,4 @@
-require('./memory')
+const memory = require('./memory')
 
 class Array {
   constructor() {
@@ -55,4 +55,13 @@ class Array {
   }
 }
 
+function main(){
+  Array.SIZE_RATIO = 3;
+
+  let arr = new Array();
+
+  arr.push(3)
+  console.log(arr)
+}
+main()
 Array.SIZE_RATIO = 3;

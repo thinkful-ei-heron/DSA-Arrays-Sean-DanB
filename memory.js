@@ -19,7 +19,7 @@ class Memory {
 
   copy(toIdx, fromIdx, size) {
     if (fromIdx === toIdx) {
-      return;
+      return
     }
 
     if (fromIdx > toIdx) {
